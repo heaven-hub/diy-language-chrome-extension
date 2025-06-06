@@ -1,0 +1,11 @@
+{
+    "application_title": {
+        "message": "DIY 語言學習"
+    },
+    "application_description": {
+        "message": "這個插件主要用來學習各種語言，可以保存單詞，語句，文章到指定數據庫，用來練習讀寫；可以斷點學習各種視頻網站的視頻，用來練習聽說讀寫"
+    },
+    "fun_video_label":{
+        "message":"開啟影片斷點"
+    }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<lang lang="en">
+    <link>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./popup.css">
+    <link rel="stylesheet" href="../style/switch.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <div id="popup-title"></div>
+            <p id="popup-desc"></p>
+            <ul class="fun-list">
+                <li class="fun-item">
+                    <span class="fun-item-desc" id="video-label" ></span>
+                    <label class="switch">
+                        <input type="checkbox" id="videoSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <span id="video-shotcut-key"></span>
+                    <span id="video-repeat-count"></span>
+                </li>
+                <!-- <li class="fun-item">
+                    <span id="video-shotcut-key"></span>
+                    <input type="text">
+                </li> -->
+                <li class="fun-item">
+                    <span class="fun-item-desc" id="blocker-label" ></span>
+                    <label class="switch">
+                        <input type="checkbox" id="blurGlassSwitch">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div id="glass"></div>
+        <script src="./i18n.js"></script>
+        <script src="./popup.js" type="module"></script>
+    </body>
+
+    </html>

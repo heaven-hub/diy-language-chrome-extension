@@ -1,0 +1,10 @@
+{
+    "application_title": {
+        "message": "diy language",
+        "description": "The title of the application, displayed in the web store."
+    },
+    "application_description": {
+        "message": "when you read some articles in Browse, if you want to remember this article or a word,you just click it and storage it into database, then you can review them in web or app that app name is diy-language",
+        "description": "The description of the application, displayed in the web store."
+    }
+}
