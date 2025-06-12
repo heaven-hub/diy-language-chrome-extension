@@ -1,16 +1,28 @@
-let hotkeyListener = null;
 let videoTimeNodeList = []
-let startTime = 0
-let endTime = 0
-let isLooping = false
+let hotkeyListener = null;
+let isLooping = false;
+let globalStartTime = 0
+let globalEndTime = 0
+let onTimeUpdateRef = null
 function loopVideoSegment({video, startTime = 0, endTime, repeatCount = 5,endLoop}) {
+    if(endLoop){
+        if (onTimeUpdateRef) {
+            video.removeEventListener("timeupdate", onTimeUpdateRef);
+            onTimeUpdateRef = null;
+        }
+        isLooping = false
+        video.currentTime = globalEndTime;
+        video.play();
+        return
+    }
     let loopCounter = 0;
-    const onTimeUpdate = () => {
+    onTimeUpdateRef = () => {
         if (video.currentTime >= endTime) {
             loopCounter++;
             if (loopCounter >= repeatCount) {
                 video.pause();
-                video.removeEventListener("timeupdate", onTimeUpdate);
+                video.removeEventListener("timeupdate", onTimeUpdateRef);
+                onTimeUpdateRef = null
                 console.log("播放完成");
                 isLooping = false
             } else {
@@ -19,39 +31,35 @@ function loopVideoSegment({video, startTime = 0, endTime, repeatCount = 5,endLoo
             }
         }
     };
-    if(endLoop){
-        video.pause();
-        video.removeEventListener("timeupdate", onTimeUpdate);
-        console.log("播放完成");
-        isLooping = false
-        return
-    }
     // 初始化
     video.currentTime = startTime;
     video.play();
     isLooping = true
     // 每次時間更新時檢查
-    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("timeupdate", onTimeUpdateRef);
 }
-function start() {
+function videoStart() {
+    const video = document.querySelector("video");
+    if(!video) return;
     chrome.storage.sync.get("videoEnabled", (data) => {
-        console.log('data',data)
+        console.log('data video',data)
         if (!data.videoEnabled) return;
         if (!hotkeyListener) {
             hotkeyListener = (e) => {
                 const video = document.querySelector("video");
+                if(!video) return;
                 console.log('ek',e)
-                if(e.shiftKey && e.key.toLowerCase() === "z"){
+                if(e.key.toLowerCase() === "z"){
                     let currentTime = video.currentTime
-                    startTime = currentTime
+                    globalStartTime = currentTime
                     video.play();
                 }
-                if (e.shiftKey && e.key.toLowerCase() === "x" && !isLooping) {
+                if (e.key.toLowerCase() === "x" && !isLooping) {
                     let currentTime = video.currentTime
-                    endTime = currentTime
-                    loopVideoSegment({video,startTime,endTime,repeatCount:5})
+                    globalEndTime = currentTime
+                    loopVideoSegment({video,startTime:globalStartTime,endTime:globalEndTime,repeatCount:5})
                 }
-                if (e.shiftKey && e.key.toLowerCase() === "c") {
+                if (e.key.toLowerCase() === "c") {
                     loopVideoSegment({video,endLoop:true})
                 }
             };
@@ -59,19 +67,16 @@ function start() {
         }
     })
 }
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    start()
+chrome.runtime.onMessage.addListener((message) => {
+    if(message.type !== 'video') return;
+    if (message.enabled) {
+        console.log('video',message)
+        videoStart()
+    } else {
+        window.removeEventListener("keydown", hotkeyListener);
+        hotkeyListener = null;
+    }
 });
-// chrome.runtime.onMessage.addListener((message) => {
-//     if (message.action) {
-//         start()
-//     } else {
-//         if (hotkeyListener) {
-//             window.removeEventListener("keydown", hotkeyListener);
-//             hotkeyListener = null;
-//         }
-//     }
-// });
-start()
+videoStart()
 
 

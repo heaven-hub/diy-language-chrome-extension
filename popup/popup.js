@@ -9,9 +9,9 @@ videoSwitch.addEventListener("change", async () => {
     chrome.storage.sync.set({ videoEnabled: isEnabled });
 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    console.log(tab.id)
     chrome.tabs.sendMessage(tab.id, {
-        action: isEnabled
+        type:'video',
+        enabled: isEnabled
     });
 });
 
@@ -29,7 +29,8 @@ blurGlassSwitch.addEventListener("change", async () => {
 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.tabs.sendMessage(tab.id, {
-        action: isEnabled
+        type:'glass',
+        enabled: isEnabled
     });
 });
 

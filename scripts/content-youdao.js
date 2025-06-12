@@ -1,5 +1,5 @@
 let loadTimes = 0
-function start(){
+function youdaoStart(){
     let timeout = setTimeout(() => {
         // match youdao translate box change the css，then it looks purer
         const translateContainer = document.querySelector(".translate-tab-container .tab-body");
@@ -15,9 +15,9 @@ function start(){
                 loadTimes = 0
                 return
             }
-            start()
+            youdaoStart()
         }
     }, 500)
 }
-start()
+youdaoStart()
 

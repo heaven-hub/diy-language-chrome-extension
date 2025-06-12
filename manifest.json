@@ -28,20 +28,39 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/content-youdao.js"],
-            "matches": ["https://fanyi.youdao.com/*"],
+            "js": [
+                "scripts/content-youdao.js"
+            ],
+            "matches": [
+                "https://fanyi.youdao.com/*"
+            ],
             "all_frames": true
         },
         {
-            "js": ["scripts/content-video-key.js","scripts/content-blocker.js"],
-            "matches": ["<all_urls>"]
+            "js": [
+                "scripts/content-video-key.js",
+                "scripts/content-blocker.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },
+        {
+            "js": [
+                "contents/translateBoard.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
         }
     ],
     "background": {
         "service_worker": "background/index.js",
         "type": "module"
     },
-    "host_permissions": ["<all_urls>"],
+    "host_permissions": [
+        "<all_urls>"
+    ],
     "commands": {
         "_execute_action": {
             "suggested_key": {
