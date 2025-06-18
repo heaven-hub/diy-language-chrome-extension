@@ -38,6 +38,7 @@ function loopVideoSegment({video, startTime = 0, endTime, repeatCount = 5,endLoo
     // 每次時間更新時檢查
     video.addEventListener("timeupdate", onTimeUpdateRef);
 }
+
 function videoStart() {
     const video = document.querySelector("video");
     if(!video) return;
@@ -64,6 +65,7 @@ function videoStart() {
                 }
             };
             window.addEventListener("keydown", hotkeyListener);
+            window.addEventListener("fullscreenchange", hotkeyListener);
         }
     })
 }

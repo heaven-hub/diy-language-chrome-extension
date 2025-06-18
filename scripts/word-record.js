@@ -8,10 +8,10 @@ function insertOverlayInto(){
     }
 }
 
-function blockerStart() {
-    chrome.storage.sync.get("glassEnabled", (data) => {
+function wordRecordStart() {
+    chrome.storage.sync.get("wordRecordEnabled", (data) => {
         let isEnabled = data.glassEnabled || false;
-        const id = "diy-glass-overlay";
+        const id = "word-recorder";
         if (isEnabled) {
             if (document.getElementById(id)) return;
 
@@ -87,9 +87,8 @@ function blockerStart() {
     });
 }
 chrome.runtime.onMessage.addListener((message) => {
-    if(message.type !== 'glass') return;
-    console.log('glass',message)
-    blockerStart()
+    if(message.type !== 'word-record') return;
+    wordRecordStart()
 });
-blockerStart()
+wordRecordStart()
 
