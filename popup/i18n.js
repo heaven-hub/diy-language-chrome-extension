@@ -6,4 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('video-shotcut-key').innerHTML = chrome.i18n.getMessage('video_shotcut_key');
     document.getElementById('video-repeat-count').innerHTML = chrome.i18n.getMessage('video_repeat_count');
 
+    document.getElementById('recorder-label').innerHTML = chrome.i18n.getMessage('recorder_label');
+
 });

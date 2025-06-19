@@ -34,3 +34,21 @@ blurGlassSwitch.addEventListener("change", async () => {
     });
 });
 
+//開啟單詞記錄
+const recorderSwitch = document.getElementById("recorderSwitch");
+
+chrome.storage.sync.get("recorderEnabled", (data) => {
+    recorderSwitch.checked = data.recorderEnabled || false;
+});
+
+recorderSwitch.addEventListener("change", async () => {
+    const isEnabled = recorderSwitch.checked;
+
+    chrome.storage.sync.set({ recorderEnabled: isEnabled });
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.tabs.sendMessage(tab.id, {
+        type:'recorder',
+        enabled: isEnabled
+    });
+});

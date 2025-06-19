@@ -15,3 +15,24 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         });
     }
 });
+
+// chrome.contextMenus.onClicked.addListener((info, tab) => {
+//     if (info.menuItemId === "my-custom-option") {
+//       const selectedText = info.selectionText;
+//       const url = `https://translate.google.com/?sl=auto&tl=zh-CN&text=${encodeURIComponent(selectedText)}&op=translate`;
+
+//       chrome.tabs.create({ url });
+//     }
+//   });
+
+// chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+//     if (info.menuItemId === "my-custom-option") {
+//         await chrome.scripting.executeScript({
+//             target: { tabId: tab.id },
+//             func: (text) => {
+//                 window.dispatchEvent(new CustomEvent("trigger-translation", { detail: text }));
+//             },
+//             args: [info.selectionText]
+//         });
+//     }
+// });

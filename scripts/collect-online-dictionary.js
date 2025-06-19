@@ -1,15 +1,15 @@
 
-function blockerStart() {
-    chrome.storage.sync.get("glassEnabled", (data) => {
-        let isEnabled = data.glassEnabled || false;
-        const id = "diy-glass-overlay";
+function collectStart() {
+    chrome.storage.sync.get("collectEnabled", (data) => {
+        let isEnabled = data.collectEnabled || false;
+        const id = "diy-collect-overlay";
         if (isEnabled) {
             if (document.getElementById(id)) return;
 
-            const glassBox = document.createElement("div");
-            const glassHandle = document.createElement("div");
-            glassBox.id = id;
-            glassBox.style.cssText = `
+            const collectBox = document.createElement("div");
+            const collectHandle = document.createElement("div");
+            collectBox.id = id;
+            collectBox.style.cssText = `
                         position: fixed;
                         top: 100px;
                         left: 100px;
@@ -23,8 +23,8 @@ function blockerStart() {
                         resize: both;
                         overflow: auto;
                     `;
-            glassHandle.id = `${id}-glassHandle`
-            glassHandle.style.cssText = `
+            collectHandle.id = `${id}-collectHandle`
+            collectHandle.style.cssText = `
                         display:none;
                         width:100%;
                         height:20px;
@@ -32,54 +32,53 @@ function blockerStart() {
                         background: rgba(17,174,236, 0.4);
                     `
 
-            if (!document.getElementById("glass-style")) {
+            if (!document.getElementById("collect-style")) {
                 const style = document.createElement("style");
-                style.id = "glass-style";
+                style.id = "collect-style";
                 style.textContent = `
-                            #diy-glass-overlay:hover #diy-glass-overlay-glassHandle {
+                            #diy-collect-overlay:hover #diy-collect-overlay-collectHandle {
                                 display:block !important;
                             }
                         `;
                 document.head.appendChild(style);
             }
-            glassBox.appendChild(glassHandle)
-            document.body.appendChild(glassBox);
+            collectBox.appendChild(collectHandle)
+            document.body.appendChild(collectBox);
 
             // 拖動功能
             let isDragging = false;
             let offsetX = 0;
             let offsetY = 0;
 
-            glassHandle.addEventListener("mousedown", (e) => {
-                if (e.target !== glassHandle) return; // 只允許拖動區域在
+            collectHandle.addEventListener("mousedown", (e) => {
+                if (e.target !== collectHandle) return; // 只允許拖動區域在
 
                 isDragging = true;
-                offsetX = e.clientX - glassBox.offsetLeft;
-                offsetY = e.clientY - glassBox.offsetTop;
+                offsetX = e.clientX - collectBox.offsetLeft;
+                offsetY = e.clientY - collectBox.offsetTop;
                 e.preventDefault();
             });
 
             document.addEventListener("mousemove", (e) => {
                 if (!isDragging) return;
-                glassBox.style.left = `${e.clientX - offsetX}px`;
-                glassBox.style.top = `${e.clientY - offsetY}px`;
+                collectBox.style.left = `${e.clientX - offsetX}px`;
+                collectBox.style.top = `${e.clientY - offsetY}px`;
             });
 
             document.addEventListener("mouseup", () => {
                 isDragging = false;
             });
         } else {
-            const glassBox = document.getElementById(id);
-            if (glassBox) {
-                glassBox.remove();
+            const collectBox = document.getElementById(id);
+            if (collectBox) {
+                collectBox.remove();
             }
         }
     });
 }
 chrome.runtime.onMessage.addListener((message) => {
-    if(message.type !== 'glass') return;
-    console.log('glass',message)
-    blockerStart()
+    if(message.type !== 'collect') return;
+    console.log('collect',message)
+    collectStart()
 });
-blockerStart()
-
+collectStart()

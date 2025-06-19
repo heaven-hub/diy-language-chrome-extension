@@ -39,7 +39,8 @@
         {
             "js": [
                 "scripts/content-video-key.js",
-                "scripts/content-blocker.js"
+                "scripts/content-blocker.js",
+                "scripts/word-record.js"
             ],
             "matches": [
                 "<all_urls>"
