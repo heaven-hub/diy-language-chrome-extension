@@ -1,3 +1,12 @@
+function insertOverlayInto(){
+    const fullscreenEl = document.fullscreenElement;
+    if (fullscreenEl) {
+        // video 已经进入全屏
+        if (fullscreenEl.querySelector('#diy-glass-overlay')) return;
+        const overlayElement = document.getElementById('diy-glass-overlay')
+        fullscreenEl.appendChild(overlayElement);
+    }
+}
 
 function blockerStart() {
     chrome.storage.sync.get("glassEnabled", (data) => {
@@ -68,10 +77,12 @@ function blockerStart() {
             document.addEventListener("mouseup", () => {
                 isDragging = false;
             });
+            document.addEventListener('fullscreenchange', insertOverlayInto);
         } else {
             const glassBox = document.getElementById(id);
             if (glassBox) {
                 glassBox.remove();
+                document.removeEventListener('fullscreenchange', insertOverlayInto);
             }
         }
     });
