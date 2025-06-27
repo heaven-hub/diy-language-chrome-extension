@@ -89,7 +89,6 @@ function blockerStart() {
 }
 chrome.runtime.onMessage.addListener((message) => {
     if(message.type !== 'glass') return;
-    console.log('glass',message)
     blockerStart()
 });
 blockerStart()

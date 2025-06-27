@@ -1,28 +1,37 @@
+function handleRecord(originalInput,translationInput,recorderBtn){
 
+}
+function sendDataToApi(){
+
+}
 function recorderStart() {
     chrome.storage.sync.get("recorderEnabled", (data) => {
         let isEnabled = data.recorderEnabled || false;
         const id = "diy-recorder-overlay";
         if (isEnabled) {
             if (document.getElementById(id)) return;
-
             const recorderBox = document.createElement("div");
             const recorderHandle = document.createElement("div");
-            const recorderInput = document.createElement("input");
+            const originalInput = document.createElement("input");
+            const translationInput = document.createElement("input");
             const recorderBtn = document.createElement("div");
+            originalInput.placeholder = chrome.i18n.getMessage('record_original_input_ph');
+            translationInput.placeholder = chrome.i18n.getMessage('record_translation_input_ph');
             recorderBox.id = id;
             recorderBox.style.cssText = `
                 position: fixed;
                 top: 100px;
                 left: 100px;
                 width: 400px;
-                height: 150px;
+                min-height: 150px;
                 background: rgba(0,0,0, 0.2);
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.4);
                 border-radius: 8px;
                 z-index: 999999;
                 overflow: auto;
+                display:flex;
+                flex-direction:column;
             `;
             recorderHandle.id = `${id}-recorderHandle`
             recorderHandle.style.cssText = `
@@ -32,8 +41,7 @@ function recorderStart() {
                 cursor: move;
                 background: rgba(17,174,236, 0.4);
             `
-            recorderInput.id = 'recorder-input';
-            recorderInput.style.cssText = `
+            let inputStyle = `
                 width:100%;
                 margin:10px;
                 border-radius: 5px;
@@ -42,18 +50,22 @@ function recorderStart() {
                 padding: 5px 7px;
                 width: 80%;
                 overflow:hidden;
+                background:#fff;
             `;
+            originalInput.id = 'original-input';
+            originalInput.style.cssText = inputStyle;
+            translationInput.id = 'translation-input';
+            translationInput.style.cssText = inputStyle;
             recorderBtn.id = 'recorder-btn';
             recorderBtn.style.cssText = `
-                position:absolute;
-                right:10px;
-                bottom:15px;
+                align-self: flex-end;
                 padding:7px 10px;
                 font-size:14px;
                 background: rgba(17,174,236, 0.7);
                 border-radius: 5px;
                 color:#fff;
                 cursor:pointer;
+                margin:10px;
             `;
             recorderBtn.innerText =  chrome.i18n.getMessage('common_sure_btn');
 
@@ -64,7 +76,7 @@ function recorderStart() {
                     #diy-recorder-overlay:hover #diy-recorder-overlay-recorderHandle {
                         visibility: visible !important;
                     }
-                    #recorder-input:focus {
+                    #original-input:focus,#translation-input:focus {
                         border: 1px solid rgba(17, 174, 236, 0.6) !important;
                     }
                     #recorder-btn:active {
@@ -74,7 +86,8 @@ function recorderStart() {
                 document.head.appendChild(style);
             }
             recorderBox.appendChild(recorderHandle)
-            recorderBox.appendChild(recorderInput)
+            recorderBox.appendChild(originalInput)
+            recorderBox.appendChild(translationInput)
             recorderBox.appendChild(recorderBtn)
             document.body.appendChild(recorderBox);
 

@@ -40,7 +40,8 @@
             "js": [
                 "scripts/content-video-key.js",
                 "scripts/content-blocker.js",
-                "scripts/word-record.js"
+                "scripts/word-record.js",
+                "scripts/skip-opening-ending.js"
             ],
             "matches": [
                 "<all_urls>"

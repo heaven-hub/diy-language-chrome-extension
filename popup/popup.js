@@ -52,3 +52,31 @@ recorderSwitch.addEventListener("change", async () => {
         enabled: isEnabled
     });
 });
+
+//開啟跳過片頭片尾
+const skipOESwitch = document.getElementById("skipOESwitch");
+const skipOEItemsBox = document.getElementById("skipOEItemsBox");
+let openingTimeStart = document.getElementById("openingTimeStart");
+openingTimeStart.addEventListener('blur',()=>{
+    console.log('openingTimeStart',openingTimeStart.value)
+})
+chrome.storage.sync.get("skipOEEnabled", (data) => {
+    skipOESwitch.checked = data.skipOEEnabled || false;
+    skipOEItemsBox.style = `
+        display:${skipOESwitch.checked?'block':'none'}
+    `
+});
+
+skipOESwitch.addEventListener("change", async () => {
+    const isEnabled = skipOESwitch.checked;
+    skipOEItemsBox.style = `
+        display:${isEnabled?'block':'none'}
+    `
+    chrome.storage.sync.set({ skipOEEnabled: isEnabled });
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.tabs.sendMessage(tab.id, {
+        type:'skipOE',
+        enabled: isEnabled
+    });
+});

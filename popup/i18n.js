@@ -7,5 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('video-repeat-count').innerHTML = chrome.i18n.getMessage('video_repeat_count');
 
     document.getElementById('recorder-label').innerHTML = chrome.i18n.getMessage('recorder_label');
+    document.getElementById('opening-ending-switch-label').innerHTML = chrome.i18n.getMessage('skip_opening_ending_label');
+    document.getElementById('opening-label').innerHTML = chrome.i18n.getMessage('skip_opening_label');
+    document.getElementById('ending-label').innerHTML = chrome.i18n.getMessage('skip_ending_label');
 
 });

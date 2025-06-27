@@ -1,10 +1,10 @@
 chrome.runtime.onMessage.addListener((message) => {
-    if (message.action === "translate") {
+    if (message.action === "translate-collect") {
         const selectedText = message.text;
-
-        // 模擬翻譯結果，可替換為實際 API
-        const fakeTranslated = selectedText + "（翻譯結果）";
-
+        let data = {
+            original:selectedText,
+            translation:''
+        }
         // 清除舊的對話框
         document.getElementById("translator-popup")?.remove();
 
@@ -12,8 +12,8 @@ chrome.runtime.onMessage.addListener((message) => {
         popup.id = "translator-popup";
         popup.style.cssText = `
         position: fixed;
-        top: 100px;
-        right: 100px;
+        top: 0px;
+        right: 40px;
         background: white;
         border: 1px solid #ccc;
         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -21,60 +21,55 @@ chrome.runtime.onMessage.addListener((message) => {
         padding: 12px;
         z-index: 99999;
         font-family: sans-serif;
-        max-width: 300px;
+        min-width: 200px;
+        min-height:80px;
+        max-width: 400px;
+        max-height: 400px;
+        overflow: auto;
       `;
 
         popup.innerHTML = `
-        <div><strong>原文：</strong>${selectedText}</div>
-        <div><strong>翻譯：</strong>${fakeTranslated}</div>
-        <button id="save-word" style="margin-top: 8px;">❤️ 收藏</button>
+        <div style="display:flex;">
+            <div style="width:45%;padding:5px;border-right:1px solid #333;"><strong></strong>${selectedText}</div>
+            <div style="width:45%;padding:5px;padding-left: 10px;" id='translated-text'><strong>${data.translation}</strong></div>
+        </div>
+        <button id="save-word" style="display: flex;align-items: center;cursor: pointer;background-color: #fff;border: 1px solid rgba(0, 0, 0, .12);border-radius: 50%;position:absolute;right:10px;top:5px;color:#f00;">
+            <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="TYVfy NMm5M"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"></path></svg>
+        </button>
       `;
-
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(selectedText)}`;
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                const translated = data?.[0]?.map(part => part[0]).join("");
+                const translatedTextDom = popup.querySelector('#translated-text');
+                translatedTextDom.innerText = translated || "無翻譯結果";
+            })
+            .catch(() => {
+                // translatedTextDom.innerText = "翻譯錯誤";
+            });
         document.body.appendChild(popup);
 
+        // 點擊框外隱藏 popup 的邏輯
+        function handleOutsideClick(event) {
+            const popupEl = document.getElementById("translator-popup");
+            if (popupEl && !popupEl.contains(event.target)) {
+                popupEl.remove();
+                document.removeEventListener("click", handleOutsideClick); // 清除事件監聽器
+            }
+        }
+        // 延遲一點再加事件，避免馬上點擊觸發關閉
+        setTimeout(() => {
+            document.addEventListener("click", handleOutsideClick);
+        }, 0);
         // 收藏按鈕點擊邏輯（儲存到 chrome.storage）
         document.getElementById("save-word").addEventListener("click", () => {
             chrome.storage.local.get({ savedWords: [] }, (res) => {
                 const updated = [...res.savedWords, { original: selectedText, translated: fakeTranslated }];
                 chrome.storage.local.set({ savedWords: updated }, async () => {
-                    let res = await fetch('http://localhost:3000/api/users');
-                    console.log('res',res)
+                    await fetch('http://localhost:3000/api/users');
                 });
             });
         });
     }
 });
-
-// window.addEventListener("trigger-translation", (e) => {
-//     const text = e.detail;
-//     const existing = document.querySelector("#my-translate-popup");
-//     if (existing) existing.remove();
-
-//     const range = window.getSelection().getRangeAt(0);
-//     const rect = range.getBoundingClientRect();
-
-//     const popup = document.createElement("div");
-//     popup.id = "my-translate-popup";
-//     popup.innerText = "載入中...";
-//     popup.style.position = `fixed`;
-//     popup.style.right = `0px`;
-//     popup.style.top = `0px`;
-//     popup.style.zIndex = `20000`;
-
-//     document.body.appendChild(popup);
-
-//     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`;
-//     fetch(url)
-//         .then(res => res.json())
-//         .then(data => {
-//             const translated = data?.[0]?.map(part => part[0]).join("");
-//             popup.innerText = translated || "無翻譯結果";
-//             console.log('translated',translated)
-
-//         })
-//         .catch(() => {
-//             popup.innerText = "翻譯錯誤";
-//         });
-
-//     setTimeout(() => popup.remove(), 8000);
-// });

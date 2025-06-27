@@ -2,16 +2,40 @@
     "application_title": {
         "message": "DIY 語言學習"
     },
+    "custom_contextMenu_collect":{
+        "message":"詞句收集"
+    },
     "application_description": {
         "message": "這個插件主要用來學習各種語言，可以保存單詞，語句，文章到指定數據庫，用來練習讀寫；可以斷點學習各種視頻網站的視頻，用來練習聽說讀寫"
     },
     "fun_video_label":{
-        "message":"開啟影片斷點"
+        "message":"影片斷點"
+    },
+    "video_shotcut_key":{
+        "message":"快捷鍵: z 斷點開始，x 重複播放z點到這個點的視頻，c 停止循環繼續視頻播放"
+    },
+    "video_repeat_count":{
+        "message":"重複次數 5"
     },
     "recorder_label":{
-        "message":"開啟詞句記錄"
+        "message":"詞句記錄器"
     },
     "common_sure_btn":{
         "message":"確認"
+    },
+    "skip_opening_ending_label":{
+        "message":"跳過片頭片尾"
+    },
+    "skip_opening_label":{
+        "message":"跳過片頭"
+    },
+    "skip_ending_label":{
+        "message":"跳過片尾"
+    },
+    "record_original_input_ph":{
+        "message":"詞句"
+    },
+    "record_translation_input_ph":{
+        "message":"詞句翻譯 | 這個可以為空"
     }
 }

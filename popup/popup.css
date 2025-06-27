@@ -30,8 +30,10 @@ li {
 .fun-item{
     display: flex;
     align-items: center;
+    margin-top: 15px;
 }
 .fun-item .fun-item-desc{
     font-size: 14px;
     margin-right: 5px;
+    width: 30%;
 }
