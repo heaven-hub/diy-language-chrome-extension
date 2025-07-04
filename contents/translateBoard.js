@@ -1,7 +1,8 @@
+// import { collectWords } from '/api/index.js';
 chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "translate-collect") {
         const selectedText = message.text;
-        let data = {
+        let selectData = {
             original:selectedText,
             translation:''
         }
@@ -30,8 +31,8 @@ chrome.runtime.onMessage.addListener((message) => {
 
         popup.innerHTML = `
         <div style="display:flex;">
-            <div style="width:45%;padding:5px;border-right:1px solid #333;"><strong></strong>${selectedText}</div>
-            <div style="width:45%;padding:5px;padding-left: 10px;" id='translated-text'><strong>${data.translation}</strong></div>
+            <div style="width:45%;padding:5px;border-right:1px solid #333;font-size:18px;"><strong></strong>${selectedText}</div>
+            <div style="width:45%;padding:5px;padding-left: 10px;font-size:18px;" id='translated-text'><strong>${selectData.translation}</strong></div>
         </div>
         <button id="save-word" style="display: flex;align-items: center;cursor: pointer;background-color: #fff;border: 1px solid rgba(0, 0, 0, .12);border-radius: 50%;position:absolute;right:10px;top:5px;color:#f00;">
             <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="TYVfy NMm5M"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z"></path></svg>
@@ -42,6 +43,7 @@ chrome.runtime.onMessage.addListener((message) => {
             .then(res => res.json())
             .then(data => {
                 const translated = data?.[0]?.map(part => part[0]).join("");
+                selectData.translation = translated
                 const translatedTextDom = popup.querySelector('#translated-text');
                 translatedTextDom.innerText = translated || "無翻譯結果";
             })
@@ -62,14 +64,17 @@ chrome.runtime.onMessage.addListener((message) => {
         setTimeout(() => {
             document.addEventListener("click", handleOutsideClick);
         }, 0);
-        // 收藏按鈕點擊邏輯（儲存到 chrome.storage）
+        // 收藏按鈕點擊邏輯
         document.getElementById("save-word").addEventListener("click", () => {
-            chrome.storage.local.get({ savedWords: [] }, (res) => {
-                const updated = [...res.savedWords, { original: selectedText, translated: fakeTranslated }];
-                chrome.storage.local.set({ savedWords: updated }, async () => {
-                    await fetch('http://localhost:3000/api/users');
-                });
-            });
+            const url = `https://diy-learn-language-next-heaven-hub1s-projects.vercel.app/api/words`;
+            let fetchOptions = {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            };
+            fetchOptions.body = JSON.stringify(selectData);
+            fetch(url,fetchOptions);
         });
     }
 });

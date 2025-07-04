@@ -45,7 +45,8 @@
             ],
             "matches": [
                 "<all_urls>"
-            ]
+            ],
+            "type": "module"
         },
         {
             "js": [
@@ -53,7 +54,8 @@
             ],
             "matches": [
                 "<all_urls>"
-            ]
+            ],
+            "type": "module"
         }
     ],
     "background": {
